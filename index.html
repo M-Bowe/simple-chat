@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Socket.IO Chat</title>
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css">
+	</head>
+	<style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+
+	<body>
+		<ul id="messages"></ul>
+		<form action="">
+			<input id="m" name="messages" autocomplete="off" placeholder="Enter a message..." required />
+			<div class="ui animated fade primary button" onclick="$('form').submit();">
+				<div class="visible content">Send</div>
+				<div class="hidden content">
+					<i class="send icon"></i>
+				</div>
+			</div>
+		</form>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+		<script>
+			$(function () {
+				var socket = io();
+				$('form').submit(function(){
+					socket.emit('chat message', $('#m').val());
+					$('#m').val('');
+					return false;
+				});
+				socket.on('chat message', function(msg){
+					$('#messages').append($('<li>').text(msg));
+				});
+			});
+		</script>
+	</body>
+</html>
